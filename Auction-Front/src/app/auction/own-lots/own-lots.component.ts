@@ -1,9 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Subscription} from "rxjs";
-import { user } from 'src/app/user';
+import {user} from 'src/app/user';
 import {AuthService} from "../../authService";
 import {HttpOwnerService} from "./http-owner-service";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-own-lots',
@@ -13,7 +12,6 @@ import {Router} from "@angular/router";
 })
 export class OwnLotsComponent implements OnInit{
   user: user | undefined;
-  private userSubscription!: Subscription;
   url: string = '';
 
   constructor(private authService: AuthService, private httpOwnerService: HttpOwnerService) {}
@@ -23,8 +21,12 @@ export class OwnLotsComponent implements OnInit{
   }
 
   delete(lotId: number) {
+    const user = this.authService.getUser();
     this.httpOwnerService.deleteLot(lotId).subscribe(() => {
-      this.refreshPage();
+      if (user) {
+        user.lots = user.lots.filter((lot) => lot.id !== lotId);
+        localStorage.setItem("userData", JSON.stringify(user));
+      }
     });
   }
 
