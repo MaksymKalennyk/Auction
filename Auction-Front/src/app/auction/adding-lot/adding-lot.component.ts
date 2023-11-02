@@ -31,18 +31,19 @@ export class AddingLotComponent {
       const userId = user.id;
       console.log(this.lot);
       this.lotService.addLot(userId, this.lot).subscribe((addedLot) => {
-        console.log('Lot added:', addedLot);
-        this.lot = {
-          id: null,
-          title: '',
-          description: '',
-          startTime: '',
-          endTime: '',
-          startingPrice: {
+          user.lots.push(addedLot);
+          localStorage.setItem("userData", JSON.stringify(user));
+          this.lot = {
             id: null,
-            price: 0
-          }
-        };
+            title: '',
+            description: '',
+            startTime: '',
+            endTime: '',
+            startingPrice: {
+              id: null,
+              price: 0
+            }
+          };
       });
     }
   }
