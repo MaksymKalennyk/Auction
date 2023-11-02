@@ -8,6 +8,7 @@ import com.example.auction.repo.StartingPriceRepository;
 import com.example.auction.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public class LotsService {
         return lotRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public Lots createLots(Lots lots) {
         return lotRepository.save(lots);
     }
