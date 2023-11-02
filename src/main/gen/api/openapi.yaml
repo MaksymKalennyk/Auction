@@ -1,0 +1,270 @@
+openapi: 3.0.0
+info:
+  description: "Документація для API, яке надає доступ до лотів та користувачів."
+  title: Мій API для лотів та користувачів
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /all/lots:
+    get:
+      description: "Повертає список усіх лотів, які зберігаються в системі."
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Lot'
+                type: array
+          description: Успішний запит
+      summary: Отримати всі лоти
+      x-accepts: application/json
+  /active/lots:
+    get:
+      description: "Повертає список активних лотів, які доступні для участі в торг\
+        ах."
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Lot'
+                type: array
+          description: Успішний запит
+      summary: Отримати активні лоти
+      x-accepts: application/json
+  /search/lot:
+    get:
+      description: "Повертає список лотів, які містять задану назву у своєму описі\
+        ."
+      parameters:
+      - description: "Назва лоту, за якою ви хочете здійснити пошук."
+        explode: true
+        in: query
+        name: title
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Lot'
+                type: array
+          description: Успішний запит
+      summary: Пошук лоту за назвою
+      x-accepts: application/json
+  /search/lot/by/id:
+    get:
+      description: Повертає інформацію про лот за його ідентифікатором.
+      parameters:
+      - description: "Ідентифікатор лоту, який ви хочете переглянути."
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lot'
+          description: Успішний запит
+      summary: Перегляд лоту за ідентифікатором
+      x-accepts: application/json
+  /delete:
+    get:
+      description: Видаляє лот за його ідентифікатором.
+      parameters:
+      - description: "Ідентифікатор лоту, який ви хочете видалити."
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: form
+      responses:
+        "204":
+          description: Лот видалено успішно
+      summary: Видалити лот за ідентифікатором
+      x-accepts: application/json
+  /generate:
+    get:
+      description: Генерує URL для лоту за його ідентифікатором.
+      parameters:
+      - description: "Ідентифікатор лоту, для якого потрібно згенерувати URL."
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Успішний запит
+      summary: Згенерувати URL лоту
+      x-accepts: text/plain
+  /start/auction:
+    post:
+      description: Розпочинає аукціон для лоту за його ідентифікатором.
+      parameters:
+      - description: "Ідентифікатор лоту, для якого потрібно розпочати аукціон."
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: form
+      responses:
+        "204":
+          description: Аукціон розпочато успішно
+      summary: Розпочати аукціон для лоту
+      x-accepts: application/json
+  /stop/auction:
+    post:
+      description: Завершує аукціон для лоту за його ідентифікатором.
+      parameters:
+      - description: "Ідентифікатор лоту, для якого потрібно завершити аукціон."
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: form
+      responses:
+        "204":
+          description: Аукціон завершено успішно
+      summary: Завершити аукціон для лоту
+      x-accepts: application/json
+  /update/price:
+    post:
+      description: Оновлює ціну лоту за назвою лоту.
+      parameters:
+      - description: "Назва лоту, для якого потрібно оновити ціну."
+        explode: true
+        in: query
+        name: lotTitle
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Нова ціна лоту.
+        explode: true
+        in: query
+        name: newPrice
+        required: true
+        schema:
+          type: integer
+        style: form
+      responses:
+        "204":
+          description: Ціну лоту оновлено успішно
+      summary: Оновити ціну лоту за назвою
+      x-accepts: application/json
+  /all/users:
+    get:
+      description: "Повертає список усіх користувачів, які зареєстровані в системі\
+        ."
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/User'
+                type: array
+          description: Успішний запит
+      summary: Отримати всіх користувачів
+      x-accepts: application/json
+  /search/user:
+    get:
+      description: Повертає інформацію про користувача за його ідентифікатором.
+      parameters:
+      - description: "Ідентифікатор користувача, якого ви хочете знайти."
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: Успішний запит
+      summary: Пошук користувача за ідентифікатором
+      x-accepts: application/json
+  /save/user:
+    post:
+      description: Зберігає нового користувача в системі.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "201":
+          description: Користувача збережено успішно
+      summary: Зберегти нового користувача
+      x-content-type: application/json
+      x-accepts: application/json
+components:
+  schemas:
+    Lot:
+      example:
+        description: description
+        id: 0
+        title: title
+      properties:
+        id:
+          description: Унікальний ідентифікатор лоту.
+          type: integer
+        title:
+          description: Назва лоту.
+          type: string
+        description:
+          description: Опис лоту.
+          type: string
+      required:
+      - id
+      - title
+      type: object
+    User:
+      example:
+        id: 0
+        email: email
+        username: username
+      properties:
+        id:
+          description: Унікальний ідентифікатор користувача.
+          type: integer
+        username:
+          description: Ім'я користувача.
+          type: string
+        email:
+          description: Email користувача.
+          type: string
+      required:
+      - id
+      - username
+      type: object
+

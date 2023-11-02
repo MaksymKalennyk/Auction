@@ -1,0 +1,225 @@
+openapi: 3.0.0
+info:
+  title: Мій API для лотів та користувачів
+  description: Документація для API, яке надає доступ до лотів та користувачів.
+  version: 1.0.0
+paths:
+  /all/lots:
+    get:
+      summary: Отримати всі лоти
+      description: Повертає список усіх лотів, які зберігаються в системі.
+      responses:
+        '200':
+          description: Успішний запит
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lot'
+  /active/lots:
+    get:
+      summary: Отримати активні лоти
+      description: Повертає список активних лотів, які доступні для участі в торгах.
+      responses:
+        '200':
+          description: Успішний запит
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lot'
+  /search/lot:
+    get:
+      summary: Пошук лоту за назвою
+      description: Повертає список лотів, які містять задану назву у своєму описі.
+      parameters:
+        - name: title
+          in: query
+          description: Назва лоту, за якою ви хочете здійснити пошук.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успішний запит
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lot'
+  /search/lot/by/id:
+    get:
+      summary: Перегляд лоту за ідентифікатором
+      description: Повертає інформацію про лот за його ідентифікатором.
+      parameters:
+        - name: id
+          in: query
+          description: Ідентифікатор лоту, який ви хочете переглянути.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успішний запит
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lot'
+  /delete:
+    get:
+      summary: Видалити лот за ідентифікатором
+      description: Видаляє лот за його ідентифікатором.
+      parameters:
+        - name: id
+          in: query
+          description: Ідентифікатор лоту, який ви хочете видалити.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Лот видалено успішно
+  /generate:
+    get:
+      summary: Згенерувати URL лоту
+      description: Генерує URL для лоту за його ідентифікатором.
+      parameters:
+        - name: id
+          in: query
+          description: Ідентифікатор лоту, для якого потрібно згенерувати URL.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успішний запит
+          content:
+            text/plain:
+              schema:
+                type: string
+  /start/auction:
+    post:
+      summary: Розпочати аукціон для лоту
+      description: Розпочинає аукціон для лоту за його ідентифікатором.
+      parameters:
+        - name: id
+          in: query
+          description: Ідентифікатор лоту, для якого потрібно розпочати аукціон.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Аукціон розпочато успішно
+  /stop/auction:
+    post:
+      summary: Завершити аукціон для лоту
+      description: Завершує аукціон для лоту за його ідентифікатором.
+      parameters:
+        - name: id
+          in: query
+          description: Ідентифікатор лоту, для якого потрібно завершити аукціон.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Аукціон завершено успішно
+  /update/price:
+    post:
+      summary: Оновити ціну лоту за назвою
+      description: Оновлює ціну лоту за назвою лоту.
+      parameters:
+        - name: lotTitle
+          in: query
+          description: Назва лоту, для якого потрібно оновити ціну.
+          required: true
+          schema:
+            type: string
+        - name: newPrice
+          in: query
+          description: Нова ціна лоту.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Ціну лоту оновлено успішно
+  /all/users:
+    get:
+      summary: Отримати всіх користувачів
+      description: Повертає список усіх користувачів, які зареєстровані в системі.
+      responses:
+        '200':
+          description: Успішний запит
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  /search/user:
+    get:
+      summary: Пошук користувача за ідентифікатором
+      description: Повертає інформацію про користувача за його ідентифікатором.
+      parameters:
+        - name: id
+          in: query
+          description: Ідентифікатор користувача, якого ви хочете знайти.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успішний запит
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /save/user:
+    post:
+      summary: Зберегти нового користувача
+      description: Зберігає нового користувача в системі.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Користувача збережено успішно
+components:
+  schemas:
+    Lot:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Унікальний ідентифікатор лоту.
+        title:
+          type: string
+          description: Назва лоту.
+        description:
+          type: string
+          description: Опис лоту.
+      required:
+        - id
+        - title
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Унікальний ідентифікатор користувача.
+        username:
+          type: string
+          description: Ім'я користувача.
+        email:
+          type: string
+          description: Email користувача.
+      required:
+        - id
+        - username
